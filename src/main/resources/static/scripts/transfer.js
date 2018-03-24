@@ -52,8 +52,8 @@ $(function () {
 	function loadFileList() {
 		var now = new Date();
 		var url = "files?";
-		$.getJSON(url + now.getTime(), function (data) {
-			files = data;
+		$.getJSON(url + now.getTime(), function (result) {
+			files = result.data;
 			fillFilesContainer();
 			$(".download").click(downloadBook);
 			$(".trash").click(deleteBook);
@@ -83,7 +83,8 @@ $(function () {
 	function getUploadProgress() {
 		var time = new Date().getTime();
 		var url = 'progress/' + encodeURI(currentFileName) + '?' + time;
-		$.getJSON(url, function (data) {
+		$.getJSON(url, function (result) {
+			var data = result.data;
 			if (!data) {
 				getProgressReties++
 				if (getProgressReties < 5) {
