@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.codeyu</groupId>
-	<artifactId>fileuploadspringboot</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>fileupload-springboot</artifactId>
+	<version>0.1.0</version>
 	<packaging>jar</packaging>
 
 	<name>fileuploadspringboot</name>
@@ -43,8 +43,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-		</plugins>
+    </plugins>
 	</build>
-
-
 </project>

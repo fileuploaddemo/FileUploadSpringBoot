@@ -11,6 +11,8 @@ public class FileuploadspringbootApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		String testPass = "Pass";
+    	assert (testPass.equals("Pass"));
 	}
 
 }

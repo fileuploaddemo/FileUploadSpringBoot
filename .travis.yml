@@ -1,0 +1,35 @@
+sudo: required
+language: java
+jdk: oraclejdk8
+services:
+- docker
+env:
+  global:
+    - secure: "h9+Nm7iuC8+++dkl2oVY7lDlhtyWQY8UyyKVeYDqSS9HP2XxkaJbeCzUH+JOtq0XT3NMWWGiujt0U4ZnTQaeJddo02jzh8p036sl764CaxRMkxr1IPdvcvyo9lIuTnRZdFOydE/2xYal4dniDSLmSJo2hmCfSl7lzXnMANZiDLH7hDvTdK8++2t7rxUBJRHmWcVRkuJkG/0khLaQjZrXkY2r+ekOXMvUKaqegTxUQaXo859DzIqy5JOpbe7tg9GWV30nhP1IKMsKtZf9MS9aX/DE8gVNkt2swP3RV4uRw5XqhOjt3A5XWivHtXb6p7IW1cjDLoFvx3HnYep0u4Qb2tB2HHTyA8WQ06++CmWnYZJ7WU4P0DHjwVf+3CpfumbokdyLUDviCQfLCGA3sbKQZ90/hlND7pdmYr6OAIxy4Cv2XwhNOoFrmGHS78GPKsBLiKpUm0hgrlj+FpBuSsJ5OGe2AaAVRTSwvGnkJNnmTWvdlebjbJuo63wZS1GxjphkMmsEhcWLj5tl8RViIWD48P+VdUbZWFFvFuTXA2gmE0wYmBNJLkgn6pG4lcHCA6eEkz5kWJHCxeIThhkdfyV9ZwSiG08RZL++dgx4F4iBOFd7RofCdSnG+knOADe3NYChHT6DSefpCISprkvnmNowvGlUGmFESj7e9n7bARB+3NQ="
+    - secure: "Jt0Fx7jOUCKZ92nFbcLif6YujqirFM2wP5iseTsNE0g0vua0aWt8/8mO4iuFwZQuT+7oc3mm0aF5zuzHg3YmdVI74Ceo8C002NR2ZXe14fxxcumXDb83Wu24PYfjJdKigiZG3VfTBVTNqd315WUdILbS/gNcdfzAy2hKgW+38WjefJTDYla6c9rTnf6KWihDSEPYCvySe5WppOpBFI6UsHifjhC7SDEeLzD3ECIysuB39V0buO85IXMqi+O8+WbNvjR7CZYT/R9Yv8sA04M9qZrkbWa/vQkqOhItuhFJiHdFwgH0QzCuPduNDZVpQ1mwFmMuBzN1+hOfGuq9oIEQ0ARSHNhJT9xlY9aSRifewN2JeQeV/j6aFFiat2AOZiXNimZKf1a/MiTh9xTy0GzKYplHInVjLqiIJBw26xROtC1Wf+pa8EwTUq8+gMTCvngCzNv/9QRvMyAaby+NuFCq/UMKh9Mr2lfrQSRI6w8SCEM2jG3C4OFPzPBZKGd887F9BO9GlF5bD+VQSPtSKh0fNxbhgurt27utw4a7GpFDtMQNkCtxztJVc0upYPAoSIODU+QX4n6k/Zr1p8NBprv7PYtN1I8pLstmCgFO6MkyyCNRbVINHTGmtkQpGlQWip4n5BMRlsXShIqyCiI1snriL+cy7FGZMInSHdowDuJmXPo="
+    - secure: "fXVFx6LA8bUV+VWQgJJuKzyUhMGtlzHn4UTBTeow9rA9Y589vU6ZqeeAX46PmAznlLdDhN671mkN/gG09eQshWmirJt9InLnH2/luaHvD2k8EC1dF9Sv6hkql9nTI1QYo1oIHUG7ExTxr4WjKL3bLG8olxSW3t0A/ttJbqOprWGn5cD8Ru6+ZaBqUiQFLxaLRoP9pcZ+3IUaXiU5k012X2VhLAGyvlKDSzLUnNo0YxiXf3+4xYpgg/m7B12XQrQnJHstXKnqGwopnX5/dL1TZXG5yBxJcuJHbvFOO626rF4OSxpMRnj4tetkIaAZSZY9uePhprGbd47h2HvaMJCFv0BEwp0BbjiFvVAGmIvFzp7aZYUL0Zknd9LYtOehbsQv7U0thCIs971eqf+9JOcToH4tNBLRix1aS7FB99u6l0ZXHEHogt5E91EEwsh2u0ETldOPUJUourIC4k/UBa7sTE1lzfomldaXyJRbOiiPE/nNGv5pCvq/GvZtcVfau2MaFspTKVCbCvNKxsSEAyYt5OxXA8Yf3T5VI8UBzYc0DVyW3MbNvJl0oNc6ZtcukkoFD/QIXto0RFjL9QvHBSjAxNkXA5TWZYAjk7168K8p/2CPfHy8fuIT5iZQxcyce45iwXHO7iAeUHrFM52Q6Aw+FPgvCvnb9HrR2coZW5uDPTA="
+    - COMMIT=${TRAVIS_COMMIT::7}
+
+git:
+  depth: 500
+
+script:
+- ./mvnw clean install -B
+- ./mvnw clean package
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+
+after_success:
+- docker login -u $DOCKER_USER -p $DOCKER_PASS
+- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH
+  ; fi`
+- export IMAGE_NAME=codeyu/fileupload-springboot
+- docker build -t $IMAGE_NAME:$COMMIT .
+- docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
+- docker push $IMAGE_NAME
+
+deploy:
+  provider: heroku
+  api_key: $HEROKU_API_KEY
