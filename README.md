@@ -3,6 +3,9 @@ A file upload web site with Spring Boot
 
 [![Build Status](https://travis-ci.org/fileuploaddemo/FileUploadSpringBoot.svg?branch=master)](https://travis-ci.org/fileuploaddemo/FileUploadSpringBoot)
 
+https://fileupload-springboot.herokuapp.com/
+
+```sh
 mvn compile
 
 mvn spring-boot:run
@@ -12,3 +15,4 @@ mvn spring-boot:run
 docker build -t codeyu/fileupload-springboot .
 
 docker run --rm -it -p 8080:8080 codeyu/fileupload-springboot:latest
+```
